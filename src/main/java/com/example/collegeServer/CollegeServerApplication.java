@@ -6,8 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CollegeServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CollegeServerApplication.class, args);
+	private static Initializer initializer;
+
+	public CollegeServerApplication(Initializer initializer) {
+		this.initializer = initializer;
+	}
+
+	public static void main(String[] args) throws Exception {
+		new SpringApplication(CollegeServerApplication.class).run(args);
+		Initializer.createAdmin();
 	}
 
 }
