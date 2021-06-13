@@ -1,22 +1,18 @@
-package com.example.collegeServer.model.buisness;
+package com.example.collegeServer.dto;
 
-import com.example.collegeServer.model.BaseEntity;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "consulting")
-public class Consulting extends BaseEntity {
+@NoArgsConstructor
+public class ConsultingDto extends BaseDto {
     private String teacherName;
     private String discipline;
     private String cabinet;
     private Date date;
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consulting")
-    private List<JoinConsultingUser> users;
+    private List<JoinConsultingUserDto> users;
 
     public String getTeacherName() {
         return teacherName;
@@ -58,11 +54,11 @@ public class Consulting extends BaseEntity {
         this.description = description;
     }
 
-    public List<JoinConsultingUser> getUsers() {
+    public List<JoinConsultingUserDto> getUsers() {
         return users;
     }
 
-    public void setUsers(List<JoinConsultingUser> users) {
+    public void setUsers(List<JoinConsultingUserDto> users) {
         this.users = users;
     }
 }

@@ -1,24 +1,22 @@
-package com.example.collegeServer.model.buisness;
+package com.example.collegeServer.dto;
 
-import com.example.collegeServer.model.BaseEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
 import java.util.Date;
 import java.util.List;
 
-@Entity(name = "master_class")
-public class MasterClass extends BaseEntity {
+@NoArgsConstructor
+@Getter
+@Setter
+public class MasterClassDto extends BaseDto {
     private String speakerName;
     private String title;
     private String cabinet;
     private Date date;
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "masterClass")
-    private List<JoinMasterClassUser> users;
+    private List<JoinMasterClassUserDto> users;
 
     public String getSpeakerName() {
         return speakerName;
@@ -60,11 +58,11 @@ public class MasterClass extends BaseEntity {
         this.description = description;
     }
 
-    public List<JoinMasterClassUser> getUsers() {
+    public List<JoinMasterClassUserDto> getUsers() {
         return users;
     }
 
-    public void setUsers(List<JoinMasterClassUser> users) {
+    public void setUsers(List<JoinMasterClassUserDto> users) {
         this.users = users;
     }
 }

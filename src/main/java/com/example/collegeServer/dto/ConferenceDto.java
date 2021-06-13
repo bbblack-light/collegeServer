@@ -1,11 +1,9 @@
-package com.example.collegeServer.model.buisness;
+package com.example.collegeServer.dto;
 
-import com.example.collegeServer.model.BaseEntity;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-
-@Entity(name = "conference")
-public class Conference extends BaseEntity {
+@NoArgsConstructor
+public class ConferenceDto extends BaseDto {
     private String teacher;
     private String password;
     private String fullId;
