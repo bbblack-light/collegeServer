@@ -17,6 +17,7 @@ public class UserDetailDto {
         private String firstName;
         private String lastName;
         private String position;
+        private String studNumber;
 
         public static UserDetailDto convertFromEntity(User user) {
             UserDetailDto dto = new UserDetailDto();

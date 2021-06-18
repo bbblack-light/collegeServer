@@ -2,6 +2,7 @@ package com.example.collegeServer.services;
 
 import com.example.collegeServer.controllers.utils.exception.InvalidArgumentException;
 import com.example.collegeServer.controllers.utils.exception.NotFoundException;
+import com.example.collegeServer.dto.ConferenceDto;
 import com.example.collegeServer.dto.ConsultingDto;
 import com.example.collegeServer.model.buisness.Consulting;
 import com.example.collegeServer.model.buisness.JoinConsultingUser;
@@ -15,7 +16,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ConsultingService {
@@ -76,5 +79,11 @@ public class ConsultingService {
             joinConsultingUserRepo.save(join);
         }
         return ResponseEntity.ok().build();
+    }
+
+    public List<ConsultingDto> getAll() {
+        return consultingRepo.findAll().stream()
+                .map(page-> modelMapper.map(page, ConsultingDto.class))
+                .collect(Collectors.toList());
     }
 }

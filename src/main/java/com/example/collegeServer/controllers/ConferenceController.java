@@ -5,8 +5,10 @@ import com.example.collegeServer.services.ConferenceService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/consulting")
+@RequestMapping("/conference")
 public class ConferenceController {
     private final ConferenceService conferenceService;
 
@@ -29,4 +31,8 @@ public class ConferenceController {
         return conferenceService.getById(id);
     }
 
+    @GetMapping("/")
+    public List<ConferenceDto> getAll() {
+        return conferenceService.getAll();
+    }
 }

@@ -1,13 +1,14 @@
 package com.example.collegeServer.controllers;
 
-import com.example.collegeServer.dto.ConsultingDto;
 import com.example.collegeServer.dto.MasterClassDto;
 import com.example.collegeServer.services.MasterClassService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/consulting")
+@RequestMapping("/master-class")
 public class MasterClassController {
     private final MasterClassService masterClassService;
 
@@ -28,6 +29,11 @@ public class MasterClassController {
     @GetMapping("/{id}")
     public MasterClassDto get(@PathVariable("id") Long id) {
         return masterClassService.getById(id);
+    }
+
+    @GetMapping("/")
+    public List<MasterClassDto> getAll() {
+        return masterClassService.getAll();
     }
 
     @DeleteMapping("/{id}/{userId}")

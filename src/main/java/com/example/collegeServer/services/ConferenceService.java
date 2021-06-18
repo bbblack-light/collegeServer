@@ -11,7 +11,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class ConferenceService {
@@ -45,5 +47,11 @@ public class ConferenceService {
             return ResponseEntity.ok().build();
         }
         throw new NotFoundException("Консультация с id " + id + " не найдена!");
+    }
+
+    public List<ConferenceDto> getAll() {
+        return conferenceRepo.findAll().stream()
+                .map(page-> modelMapper.map(page, ConferenceDto.class))
+                .collect(Collectors.toList());
     }
 }

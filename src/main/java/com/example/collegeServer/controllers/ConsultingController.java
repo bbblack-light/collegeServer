@@ -5,6 +5,8 @@ import com.example.collegeServer.services.ConsultingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/consulting")
 public class ConsultingController {
@@ -33,6 +35,13 @@ public class ConsultingController {
     public ConsultingDto get(@PathVariable("id") Long id) {
         return consultingService.getById(id);
     }
+
+    @GetMapping("/")
+    public List<ConsultingDto> getAll() {
+        return consultingService.getAll();
+    }
+
+
 
     @PostMapping("/{id}")
     public ResponseEntity addJoin(@PathVariable("id") Long id, @PathVariable("userId") String userId) {

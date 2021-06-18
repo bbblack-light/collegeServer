@@ -1,7 +1,5 @@
 package com.example.collegeServer.dto.user;
 
-import com.example.collegeServer.model.user.Gender;
-import com.example.collegeServer.model.user.Role;
 import com.example.collegeServer.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,19 +14,16 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class UserDto {
     private String userId;
+    private String password = "";
     private String firstName;
     private String lastName;
+    private String patronymic;
     private String email;
-    private Role role;
-    private Long groupId;
-    private Gender gender;
-    private String phone;
-    private String password;
-    private String position;
+    private String studNumber;
 
     public static UserDto convertFromEntity(User user) {
         UserDto dto = new UserDto();
-        BeanUtils.copyProperties(user, dto, "group", "password");
+        BeanUtils.copyProperties(user, dto, "password");
         return dto;
     }
 
@@ -68,37 +63,6 @@ public class UserDto {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Long groupId) {
-        this.groupId = groupId;
-    }
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -106,12 +70,19 @@ public class UserDto {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getPosition() {
-        return position;
+    public String getStudNumber() {
+        return studNumber;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setStudNumber(String studNumber) {
+        this.studNumber = studNumber;
+    }
+
+    public String getPatronymic() {
+        return patronymic;
+    }
+
+    public void setPatronymic(String patronymic) {
+        this.patronymic = patronymic;
     }
 }

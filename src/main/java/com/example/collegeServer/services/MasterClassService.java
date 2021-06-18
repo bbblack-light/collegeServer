@@ -2,6 +2,7 @@ package com.example.collegeServer.services;
 
 import com.example.collegeServer.controllers.utils.exception.InvalidArgumentException;
 import com.example.collegeServer.controllers.utils.exception.NotFoundException;
+import com.example.collegeServer.dto.ConsultingDto;
 import com.example.collegeServer.dto.MasterClassDto;
 import com.example.collegeServer.model.buisness.Consulting;
 import com.example.collegeServer.model.buisness.JoinMasterClassUser;
@@ -14,7 +15,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class MasterClassService {
@@ -73,5 +76,11 @@ public class MasterClassService {
             joinMasterClassUserRepo.save(join);
         }
         return ResponseEntity.ok().build();
+    }
+
+    public List<MasterClassDto> getAll() {
+        return masterClassRepo.findAll().stream()
+                .map(page-> modelMapper.map(page, MasterClassDto.class))
+                .collect(Collectors.toList());
     }
 }
