@@ -32,7 +32,6 @@ public class ConsultingService {
         this.consultingRepo = consultingRepo;
         this.joinConsultingUserRepo = joinConsultingUserRepo;
         this.userRepo = userRepo;
-        this.emailService.sendSimpleMessage("barakova.2000@mail.ru", "New message", "hi! MyFirstMessage");
     }
 
     public ConsultingDto save(ConsultingDto dto) {

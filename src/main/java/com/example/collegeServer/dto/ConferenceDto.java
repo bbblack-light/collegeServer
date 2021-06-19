@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 public class ConferenceDto extends BaseDto {
     private String teacher;
     private String password;
-    private String fullId;
     private String url;
 
     public String getTeacher() {
@@ -23,14 +22,6 @@ public class ConferenceDto extends BaseDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFullId() {
-        return fullId;
-    }
-
-    public void setFullId(String fullId) {
-        this.fullId = fullId;
     }
 
     public String getUrl() {

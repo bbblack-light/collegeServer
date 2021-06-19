@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 public class Conference extends BaseEntity {
     private String teacher;
     private String password;
-    private String fullId;
     private String url;
 
     public String getTeacher() {
@@ -25,14 +24,6 @@ public class Conference extends BaseEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFullId() {
-        return fullId;
-    }
-
-    public void setFullId(String fullId) {
-        this.fullId = fullId;
     }
 
     public String getUrl() {
