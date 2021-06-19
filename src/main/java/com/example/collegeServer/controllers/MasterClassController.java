@@ -41,7 +41,7 @@ public class MasterClassController {
         return masterClassService.deleteJoin(id, userId);
     }
 
-    @PostMapping("/{id}")
+    @GetMapping("/{id}/{userId}")
     public ResponseEntity addJoin(@PathVariable("id") Long id, @PathVariable("userId") String userId) {
         return masterClassService.addJoin(id, userId);
     }

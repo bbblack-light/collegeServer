@@ -16,7 +16,6 @@ public class Initializer {
 
     public static void createAdmin() {
         User user = new User();
-        user.setActive(true);
         user.setPassword("$2a$10$U0fbYjlwLFraz1UHrjjX2.rErJoP/X.KIRthU9jtmMkRACYBeVOpG");
         user.setUserId("admin");
         user.setRole(Role.ADMIN);

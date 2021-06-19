@@ -48,9 +48,7 @@ public class GenerateTokenForUserFilter extends AbstractAuthenticationProcessing
             String password = userJSON.getString("password");
             String browser = request.getHeader("User-Agent") != null ? request.getHeader("User-Agent") : "";
             String ip = request.getRemoteAddr();
-//            log.info("\nip:{} \nbrowser:{} \n----", ip, browser);
 
-            //final UsernamePasswordAuthenticationToken loginToken = new UsernamePasswordAuthenticationToken("demo", "demo");
             final UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password);
             return getAuthenticationManager().authenticate(authToken); // This will take to successfulAuthentication or faliureAuthentication function
         } catch (JSONException | AuthenticationException e) {
@@ -62,17 +60,6 @@ public class GenerateTokenForUserFilter extends AbstractAuthenticationProcessing
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication authToken) throws IOException, ServletException {
         res.setCharacterEncoding("UTF-8");
         SecurityContextHolder.getContext().setAuthentication(authToken);
-        /*
-        JSONObject jsonResp = new JSONObject();
-        TokenUser tokenUser = (TokenUser)authToken.getPrincipal();
-        String newToken = this.tokenUtil.createTokenForUser(tokenUser);
-
-        jsonResp.put("token",newToken);
-        jsonResp.put("firstName",tokenUser.getUser().getFirstName());
-        jsonResp.put("lastName",tokenUser.getUser().getLastName());
-        jsonResp.put("email",tokenUser.getUser().getEmail());
-        jsonResp.put("role",tokenUser.getRole());
-        */
 
         TokenUser tokenUser = (TokenUser) authToken.getPrincipal();
         SessionResponse resp = new SessionResponse("Login Success");
@@ -92,7 +79,6 @@ public class GenerateTokenForUserFilter extends AbstractAuthenticationProcessing
         res.setStatus(HttpServletResponse.SC_OK);
         res.setHeader("Authorization", tokenString);
         res.getWriter().write(jsonRespString);
-        //res.getWriter().write(jsonResp.toString());
         res.getWriter().flush();
         res.getWriter().close();
 

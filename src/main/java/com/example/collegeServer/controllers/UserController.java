@@ -3,6 +3,7 @@ package com.example.collegeServer.controllers;
 import com.example.collegeServer.controllers.utils.response.OperationResponse;
 import com.example.collegeServer.dto.user.UserDto;
 import com.example.collegeServer.model.user.User;
+import com.example.collegeServer.services.EmailService;
 import com.example.collegeServer.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,10 +18,12 @@ import java.util.List;
 @Api(tags = {"Authentication"})
 public class UserController {
 
+    private final EmailService emailService;
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(EmailService emailService, UserService userService) {
+        this.emailService = emailService;
         this.userService = userService;
     }
 
@@ -39,7 +42,18 @@ public class UserController {
     @ApiOperation(value = "Add new user", response = OperationResponse.class)
     @RequestMapping(value = "/registration", method = RequestMethod.POST, produces = {"application/json"})
     public OperationResponse addNewUser(@RequestBody User user, HttpServletRequest req) {
+        String password = user.getPassword();
         boolean userAddSuccess = userService.addNewUser(user);
+        if (userAddSuccess && user.getEmail()!=null && !user.getEmail().isEmpty()) {
+            try {
+                this.emailService.sendSimpleMessage(user.getEmail(),
+                        "Регистрация на сайте колледжа",
+                        "Ваш профиль был зарегестрирован!/n" +
+                        "Ваш логин: " + user.getUserId() + "/n" +
+                        "Ваш пароль:" + password);
+            }
+            catch (Exception e) { }
+        }
         return userAddSuccess ? new OperationResponse("user added") : new OperationResponse("user did not added");
     }
 

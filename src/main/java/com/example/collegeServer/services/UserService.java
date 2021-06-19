@@ -94,10 +94,6 @@ public class UserService {
         return UserDto.convertFromEntities(userRepo.findAll());
     }
 
-    public User save(User user) {
-        return userRepo.save(user);
-    }
-
     public ResponseEntity<Object> delete(String userId) {
         Optional<User> user = userRepo.findOneByUserId(userId);
         if (user.isPresent()) {

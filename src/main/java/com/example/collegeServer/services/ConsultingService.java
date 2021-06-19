@@ -2,12 +2,9 @@ package com.example.collegeServer.services;
 
 import com.example.collegeServer.controllers.utils.exception.InvalidArgumentException;
 import com.example.collegeServer.controllers.utils.exception.NotFoundException;
-import com.example.collegeServer.dto.ConferenceDto;
 import com.example.collegeServer.dto.ConsultingDto;
 import com.example.collegeServer.model.buisness.Consulting;
 import com.example.collegeServer.model.buisness.JoinConsultingUser;
-import com.example.collegeServer.model.buisness.JoinMasterClassUser;
-import com.example.collegeServer.model.buisness.MasterClass;
 import com.example.collegeServer.model.user.User;
 import com.example.collegeServer.repo.ConsultingRepo;
 import com.example.collegeServer.repo.JoinConsultingUserRepo;
@@ -16,23 +13,26 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class ConsultingService {
-
+    private final EmailService emailService;
     private final ModelMapper modelMapper;
     private final ConsultingRepo consultingRepo;
     private final JoinConsultingUserRepo joinConsultingUserRepo;
     private final UserRepo userRepo;
 
-    public ConsultingService(ModelMapper modelMapper, ConsultingRepo consultingRepo, JoinConsultingUserRepo joinConsultingUserRepo, UserRepo userRepo) {
+    public ConsultingService(EmailService emailService, ModelMapper modelMapper, ConsultingRepo consultingRepo, JoinConsultingUserRepo joinConsultingUserRepo, UserRepo userRepo) {
+        this.emailService = emailService;
         this.modelMapper = modelMapper;
         this.consultingRepo = consultingRepo;
         this.joinConsultingUserRepo = joinConsultingUserRepo;
         this.userRepo = userRepo;
+        this.emailService.sendSimpleMessage("barakova.2000@mail.ru", "New message", "hi! MyFirstMessage");
     }
 
     public ConsultingDto save(ConsultingDto dto) {
@@ -45,20 +45,33 @@ public class ConsultingService {
 
     public ConsultingDto getById(Long id) {
         if (consultingRepo.existsById(id)) {
-            return  modelMapper.map(consultingRepo.getById(id), ConsultingDto.class);
+            return modelMapper.map(consultingRepo.getById(id), ConsultingDto.class);
         }
         throw new NotFoundException("Консультация с id " + id + " не найдена!");
     }
 
     public ResponseEntity deleteById(Long id) {
-        //todo: mail sender
-        if (consultingRepo.existsById(id)) {
+        Consulting consulting = consultingRepo.findById(id).orElse(null);
+        if (consulting!=null) {
             consultingRepo.deleteById(id);
+            consulting.getUsers().forEach(user -> {
+                if (user.getUser()!=null && user.getUser().getEmail()!=null && !user.getUser().getEmail().isEmpty()) {
+                    try {
+                        this.emailService.sendSimpleMessage(user.getUser().getEmail(), "Отмена консультации",
+                           "Консультация по предмету " + consulting.getDiscipline() +
+                                " у преподователя " + consulting.getTeacherName()  +
+                                " в время " + consulting.getDate().getDay()+ "." + consulting.getDate().getMonth() + "." + consulting.getDate().getYear() +
+                                " " + consulting.getDate().getHours() + ":" + consulting.getDate().getMinutes() + "" + " была отменена");
+                    }
+                    catch (Exception e) { }
+                }
+            });
             return ResponseEntity.ok().build();
         }
         throw new NotFoundException("Консультация с id " + id + " не найдена!");
     }
 
+    @Transactional
     public ResponseEntity deleteJoin(Long id, String userId) {
         User user = userRepo.findOneByUserId(userId).orElseThrow(() -> new NotFoundException("Пользователь с userId " + userId + " не найден!"));
         Consulting consulting = consultingRepo.findById(id).orElseThrow(() -> new NotFoundException("Консультация с id " + id + " не найдена!"));

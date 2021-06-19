@@ -41,9 +41,7 @@ public class ConsultingController {
         return consultingService.getAll();
     }
 
-
-
-    @PostMapping("/{id}")
+    @GetMapping("/{id}/{userId}")
     public ResponseEntity addJoin(@PathVariable("id") Long id, @PathVariable("userId") String userId) {
         return consultingService.addJoin(id, userId);
     }

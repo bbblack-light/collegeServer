@@ -22,7 +22,6 @@ it is applied to all the routes which are protected
 public class VerifyTokenFilter extends GenericFilterBean {
 
     private final TokenUtil tokenUtil;
-    //private AuthenticationFailureHandler loginFailureHandler = new SimpleUrlAuthenticationFailureHandler();
 
     public VerifyTokenFilter(TokenUtil tokenUtil) {
         this.tokenUtil = tokenUtil;
