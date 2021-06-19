@@ -23,8 +23,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private boolean isActive;
-
     public User() {
         new User(
                 "new",
@@ -50,14 +48,6 @@ public class User {
         this.patronymic = patronymic;
         this.email = email;
         this.role = role;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     public String getUserId() {

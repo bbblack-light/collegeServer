@@ -1,5 +1,6 @@
 package com.example.collegeServer.dto.user;
 
+import com.example.collegeServer.model.user.Role;
 import com.example.collegeServer.model.user.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class UserDto {
     private String patronymic;
     private String email;
     private String studNumber;
+    private Role role;
 
     public static UserDto convertFromEntity(User user) {
         UserDto dto = new UserDto();
@@ -84,5 +86,13 @@ public class UserDto {
 
     public void setPatronymic(String patronymic) {
         this.patronymic = patronymic;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
