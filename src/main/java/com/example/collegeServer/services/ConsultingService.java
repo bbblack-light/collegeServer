@@ -10,16 +10,22 @@ import com.example.collegeServer.repo.ConsultingRepo;
 import com.example.collegeServer.repo.JoinConsultingUserRepo;
 import com.example.collegeServer.repo.UserRepo;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class ConsultingService {
+    private static Logger logger = LoggerFactory.getLogger(ConsultingService.class);
     private final EmailService emailService;
     private final ModelMapper modelMapper;
     private final ConsultingRepo consultingRepo;
@@ -39,27 +45,33 @@ public class ConsultingService {
             throw new InvalidArgumentException("Концультация не должна быть null");
         }
         Consulting consulting = modelMapper.map(dto, Consulting.class);
-        Consulting buff  = consultingRepo.findById(dto.getId()).orElseGet(null);
+        Consulting buff  = consultingRepo.findById(dto.getId()).orElse(null);
+        List<JoinConsultingUser> users = buff!=null ? buff.getUsers().stream().collect(Collectors.toList()) : new ArrayList<>();
+        Date date = null;
+        if (buff!=null) {
+            date = (Date) buff.getDate().clone();
+        }
         consulting = consultingRepo.save(consulting);
-        if (buff!=null && consulting.getDate()!=null && consulting.getDate().equals(buff.getDate())) {
+        if (date!=null && consulting.getDate()!=null && !consulting.getDate().equals(date)) {
             Consulting finalConsulting = consulting;
-            consulting.getUsers().forEach(user -> {
+            Date finalDate = date;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy. 'в' HH:mm");
+            users.forEach(user -> {
                 if (user.getUser()!=null && user.getUser().getEmail()!=null && !user.getUser().getEmail().isEmpty()) {
                     try {
                         this.emailService.sendSimpleMessage(user.getUser().getEmail(), "Перенос консультации",
-                                "Консультация по предмету " + buff.getDiscipline() +
-                                        " у преподователя " + buff.getTeacherName()  +
-                                        " в время " + buff.getDate().getDay()+ "." + buff.getDate().getMonth() + "." + buff.getDate().getYear() +
-                                        " " + buff.getDate().getHours() + ":" + buff.getDate().getMinutes() + "" + " был перенен на " +
-                                        "" + finalConsulting.getDate().getDay()+ "." + finalConsulting.getDate().getMonth() + "." + finalConsulting.getDate().getYear() +
-                                        " " + finalConsulting.getDate().getHours() + ":" + finalConsulting.getDate().getMinutes());
+                                "Консультация по предмету " + finalConsulting.getDiscipline() +
+                                        " у преподователя " + finalConsulting.getTeacherName()  +
+                                        " " + dateFormat.format(finalDate) + " был перенен на " +dateFormat.format(finalConsulting.getDate()));
                     }
-                    catch (Exception e) { }
+                    catch (Exception e) {
+                        logger.info(e.getMessage());
+                    }
                 }
             });
         }
 
-        return modelMapper.map(consultingRepo.save(consulting), ConsultingDto.class);
+        return modelMapper.map(consulting, ConsultingDto.class);
     }
 
     public ConsultingDto getById(Long id) {
@@ -73,16 +85,17 @@ public class ConsultingService {
         Consulting consulting = consultingRepo.findById(id).orElse(null);
         if (consulting!=null) {
             consultingRepo.deleteById(id);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy. 'в' HH:mm");
             consulting.getUsers().forEach(user -> {
                 if (user.getUser()!=null && user.getUser().getEmail()!=null && !user.getUser().getEmail().isEmpty()) {
                     try {
                         this.emailService.sendSimpleMessage(user.getUser().getEmail(), "Отмена консультации",
                            "Консультация по предмету " + consulting.getDiscipline() +
-                                " у преподователя " + consulting.getTeacherName()  +
-                                " в время " + consulting.getDate().getDay()+ "." + consulting.getDate().getMonth() + "." + consulting.getDate().getYear() +
-                                " " + consulting.getDate().getHours() + ":" + consulting.getDate().getMinutes() + "" + " была отменена");
+                                " у преподователя " + consulting.getTeacherName()  + dateFormat.format(consulting.getDate()) + " была отменена");
                     }
-                    catch (Exception e) { }
+                    catch (Exception e) {
+                        logger.info(e.getMessage());
+                    }
                 }
             });
             return ResponseEntity.ok().build();
