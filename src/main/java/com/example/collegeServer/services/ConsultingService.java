@@ -39,6 +39,26 @@ public class ConsultingService {
             throw new InvalidArgumentException("Концультация не должна быть null");
         }
         Consulting consulting = modelMapper.map(dto, Consulting.class);
+        Consulting buff  = consultingRepo.findById(dto.getId()).orElseGet(null);
+        consulting = consultingRepo.save(consulting);
+        if (buff!=null && consulting.getDate()!=null && consulting.getDate().equals(buff.getDate())) {
+            Consulting finalConsulting = consulting;
+            consulting.getUsers().forEach(user -> {
+                if (user.getUser()!=null && user.getUser().getEmail()!=null && !user.getUser().getEmail().isEmpty()) {
+                    try {
+                        this.emailService.sendSimpleMessage(user.getUser().getEmail(), "Перенос консультации",
+                                "Консультация по предмету " + buff.getDiscipline() +
+                                        " у преподователя " + buff.getTeacherName()  +
+                                        " в время " + buff.getDate().getDay()+ "." + buff.getDate().getMonth() + "." + buff.getDate().getYear() +
+                                        " " + buff.getDate().getHours() + ":" + buff.getDate().getMinutes() + "" + " был перенен на " +
+                                        "" + finalConsulting.getDate().getDay()+ "." + finalConsulting.getDate().getMonth() + "." + finalConsulting.getDate().getYear() +
+                                        " " + finalConsulting.getDate().getHours() + ":" + finalConsulting.getDate().getMinutes());
+                    }
+                    catch (Exception e) { }
+                }
+            });
+        }
+
         return modelMapper.map(consultingRepo.save(consulting), ConsultingDto.class);
     }
 
