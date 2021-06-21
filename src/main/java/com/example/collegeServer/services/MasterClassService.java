@@ -64,7 +64,7 @@ public class MasterClassService {
                         this.emailService.sendSimpleMessage(user.getUser().getEmail(), "Перенос мастер-класса",
                                 "Мастер класс по теме " + finalMasterClass.getTitle() +
                                         " у спикера " + finalMasterClass.getSpeakerName()  +
-                                        dateFormat.format(finalDate) + " был перенен на " +dateFormat.format(finalMasterClass.getDate()));
+                                        dateFormat.format(finalDate) + " был перенесен на " +dateFormat.format(finalMasterClass.getDate()));
                     }
                     catch (Exception e) {
                         logger.info(e.getMessage());

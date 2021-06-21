@@ -62,7 +62,7 @@ public class ConsultingService {
                         this.emailService.sendSimpleMessage(user.getUser().getEmail(), "Перенос консультации",
                                 "Консультация по предмету " + finalConsulting.getDiscipline() +
                                         " у преподователя " + finalConsulting.getTeacherName()  +
-                                        " " + dateFormat.format(finalDate) + " был перенен на " +dateFormat.format(finalConsulting.getDate()));
+                                        " " + dateFormat.format(finalDate) + " была перенесена на " +dateFormat.format(finalConsulting.getDate()));
                     }
                     catch (Exception e) {
                         logger.info(e.getMessage());
